@@ -1,7 +1,5 @@
 require('dotenv').config();
 const { ethers } = require('ethers');
-const readline = require('readline');
-const fs = require('fs');
 
 const RPC_URL = "https://testnet-rpc.monad.xyz/";
 
@@ -18,12 +16,6 @@ const WMON_ABI = [
     "function deposit() public payable",
     "function withdraw(uint256 wad) public"
 ];
-
-// 🔹 Terminalden giriş için fonksiyon
-const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
-});
 
 async function wrapMON(wallet, amount) {
     try {
@@ -73,7 +65,7 @@ async function autoSwap() {
             const wallet = new ethers.Wallet(key, provider);
 
             await wrapMON(wallet, amount);
-            // 2 ile 4 dakika arası rastgele bekle
+
             const waitfonarasi = Math.floor(Math.random() * (4 - 2 + 1) + 2) * 60 * 1000;
             console.log(`⏳ ${waitfonarasi / 60000} dakika bekleniyor...`);
             await new Promise(resolve => setTimeout(resolve, waitfonarasi));
@@ -81,7 +73,6 @@ async function autoSwap() {
 
             console.log(`✅ **Döngü ${i} cüzdan ${wallet.address} için tamamlandı**`);
 
-            // 2 ile 8 dakika arası rastgele bekle
             const waitTime = Math.floor(Math.random() * (8 - 2 + 1) + 2) * 60 * 1000;
             console.log(`⏳ ${waitTime / 60000} dakika bekleniyor...`);
             await new Promise(resolve => setTimeout(resolve, waitTime));
@@ -93,13 +84,11 @@ async function autoSwap() {
 
 async function main() {
     if (privateKeys.length === 0) {
-        console.log("❌ Hiçbir özel anahtar bulunamadı! Lütfen `.env` dosyasını doldurduğunuzdan emin olun.");
+        console.log("❌  özel anahtar bulunamadı! Lütfen `.env` dosyasını doldurduğunuzdan emin olun.");
         return;
     }
 
     await autoSwap();
-
-    rl.close();
 }
 
 main();
